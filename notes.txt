@@ -1,0 +1,40 @@
+játékos, üzemeltető fülek
+Játékos
+	név, egyenleg, feladott szelvények száma
+	információs sáv
+	közép feladás
+	feladás gomb
+	jobb oldalt leadott szelvények, no ordering
+		találatok száma/szelvény order by, nyeremény/ticket, sum reward
+		
+Üzemeltető
+	szelvény feladás generálás
+	feladott szelvények
+		 elején a játékos szelvényei
+		 generált, játékos-é-e
+		 no order
+		 
+		 húzás után
+			 találatok számát
+			 szelvényre kifizetendő összeget
+			 rendezni bármely oszlop alapján
+			 
+	eredmény kimutatás
+		minden körre
+	húzás indítása
+	mutatni a kihúzozz számokat
+	új kör indítás
+	új játék
+
+
+data struct
+	player {name, balance}
+	tickets {id, date, drawId, player_name, numbers, hits, price}
+	admin {balance,}
+	draws{id, isactive, numbers}
+	lottery meta {hints, reward}
+localstorage
+filter,sort, map
+
+lista a változtatásokról, megjegyzések
+github link
