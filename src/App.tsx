@@ -8,8 +8,6 @@ import Admin from "./Admin";
 function App() {
   const [playerActive, setPlayerActive] = useState(true);
 
-  // localstorage kiolv initkor
-
   return (
     <ContextProvider>
       <div className="w-full h-full">

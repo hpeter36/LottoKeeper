@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 
 type PlayerData = {
   name: string | undefined;
@@ -9,14 +9,14 @@ type AdminData = {
   balance: number;
 };
 
-type TicketData = {
+export type TicketData = {
   id: number;
   date: Date;
   drawID: number;
   player: string;
   numbers: [number, number, number, number, number];
   hits: number | undefined;
-  reward: number | undefined;
+  reward: number;
 };
 
 type LotteryRewardData = {
@@ -51,6 +51,8 @@ type ContextData = {
   setTickets: React.Dispatch<React.SetStateAction<TicketData[]>> | undefined;
   draws: DrawData[];
   setDraws: React.Dispatch<React.SetStateAction<DrawData[]>> | undefined;
+  infoText: string;
+  setInfoText: React.Dispatch<React.SetStateAction<string>> | undefined;
 };
 
 const appData: AppData = {
@@ -80,14 +82,82 @@ export const AppContext = createContext<ContextData>({
   setTickets: undefined,
   draws: appData.draws,
   setDraws: undefined,
+  infoText: "",
+  setInfoText: undefined,
 });
 
 const ContextProvider = ({ children }: React.PropsWithChildren) => {
-  const [playerData, setPlayerData] = useState(appData.playerData);
-  const [adminData, setAdminData] = useState(appData.adminData);
+  
+// ha a generic nem megy
+// const InitAndLoadPlayerData = () => {
+//     const data = window.localStorage.getItem("playerData");
+//     if (!data) {
+//       window.localStorage.setItem(
+//         "playerData",
+//         JSON.stringify(appData.playerData)
+//       );
+//       return appData.playerData;
+//     } else return JSON.parse(data) as PlayerData;
+//   };
+
+  function getInitialContextDataAtKey(k: string)
+  {
+	switch(k)
+	{
+		case "playerData":
+			return appData.playerData
+		case "adminData":
+			return appData.adminData
+		case "tickets":
+			return appData.tickets
+		case "draws":
+			return appData.draws
+
+	}
+  }
+
+  function InitAndLoadPlayerData2<T>(k: string) // key - type name must match
+  {
+    const data = window.localStorage.getItem(k);
+
+	// no data in local storage, save initial and return
+    if (!data) {
+	  const initialData = getInitialContextDataAtKey(k) as T;
+      window.localStorage.setItem(
+        k,
+        JSON.stringify(initialData)
+      );
+      return initialData;
+    } 
+	// return stored data from local storage
+	else return JSON.parse(data) as T;
+  };
+
+
+  const [playerData, setPlayerData] = useState(InitAndLoadPlayerData2<PlayerData>("playerData"));
+  const [adminData, setAdminData] = useState(InitAndLoadPlayerData2<AdminData>("adminData"));
   const [lotteryMeta, setLotteryMeta] = useState(appData.lotteryMeta);
-  const [tickets, setTickets] = useState(appData.tickets);
-  const [draws, setDraws] = useState(appData.draws);
+  const [tickets, setTickets] = useState(InitAndLoadPlayerData2<TicketData[]>("tickets"));
+  const [draws, setDraws] = useState(InitAndLoadPlayerData2<DrawData[]>("draws"));
+  const [infoText, setInfoText] = useState("");
+
+  useEffect(() => {
+    
+  }, []);
+
+  // update localstorage on value changes
+  useEffect(() => {
+	localStorage.setItem("playerData", JSON.stringify(playerData))
+  },[playerData])
+  useEffect(() => {
+	localStorage.setItem("adminData", JSON.stringify(adminData))
+  },[adminData])
+  useEffect(() => {
+	localStorage.setItem("tickets", JSON.stringify(tickets))
+  },[tickets])
+  useEffect(() => {
+	localStorage.setItem("draws", JSON.stringify(draws))
+  },[draws])
 
   return (
     <AppContext.Provider
@@ -101,6 +171,8 @@ const ContextProvider = ({ children }: React.PropsWithChildren) => {
         setTickets,
         draws,
         setDraws,
+        infoText,
+        setInfoText,
       }}
     >
       {children}

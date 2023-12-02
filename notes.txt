@@ -38,3 +38,4 @@ filter,sort, map
 
 lista a változtatásokról, megjegyzések
 github link
+az a quiz appos design amit láttam korábban

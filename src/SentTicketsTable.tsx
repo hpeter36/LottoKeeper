@@ -1,32 +1,40 @@
 import React from "react";
+import { TicketData } from "./ContextProvider";
 
-const SentTicketsTable = () => {
-  
-	const dummyData = [
-		{numbers: [1, 2, 3,4,5], matches: 2, reward: 200},
-		{numbers: [4, 23, 30,4,10], matches: 4, reward: 2000},
-		{numbers: [7, 2, 18,16,33], matches: 0, reward: 0},
-		{numbers: [9, 5, 13,17,28], matches: 1, reward: 0},
-	]
+type SentTicketsTableInputs = {
+  ticketData: TicketData[]
+}
+
+const SentTicketsTable = ({ticketData}: SentTicketsTableInputs) => {
+
+  const ticketsForPlayer = ticketData.filter(d => d.player === "Player")
 	
 	return (
     <div>
       <h2>Sent tickets</h2>
       <table>
 		{/* table header */}
-        <tr>
+        <thead>
+          <tr>
           <th className="p-5 text-left">Ticket numbers</th>
           <th className="p-5 text-left">Match count</th>
           <th className="p-5 text-left">Reward</th>
-        </tr>
+          </tr>
+        </thead>
+        <tbody>
+    {ticketsForPlayer.length === 0 && (<tr><td colSpan={3} className="p-5 text-center">There is no any ticket sent</td></tr>)}
 		{/* table data */}
-		{dummyData.map((d,i) => (<tr><td className="p-5 text-left">{d.numbers.join(" ")}</td><td className="p-5 text-left">{d.matches}</td><td className="p-5 text-left">{d.reward}</td></tr>))}
+		{ticketsForPlayer.sort((d1, d2) => d1.date.getTime() - d2.date.getTime()).map((d,i) => (
+    <tr key={i}>
+      <td className="p-5 text-left">{d.numbers.join(" ")}</td>
+      <td className="p-5 text-left">{d.hits ? d.hits : "-"}</td>
+      <td className="p-5 text-left">{d.hits ? d.reward : "-"}</td></tr>))}
 
         {/* sum rewards */}
         <tr>
           <th colSpan={3} className="p-5 text-center">Sum reward</th>
         </tr>
-		<tr><td colSpan={3} className="p-5 text-center"> 10000</td></tr>
+		<tr><td colSpan={3} className="p-5 text-center">{ticketsForPlayer.map(d => d.reward).reduce((accumulator, currentValue) => accumulator + currentValue, 0)}</td></tr></tbody>
       </table>
     </div>
   );
