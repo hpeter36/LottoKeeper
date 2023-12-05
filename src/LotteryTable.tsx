@@ -1,8 +1,13 @@
 import React, { useState, useContext } from "react";
-import { AppContext, TicketData } from "./ContextProvider";
+import { AppContext, LotteryNumbers } from "./ContextProvider";
+import { getRangeArrWithLen } from "./helpers";
 
-const LotteryTable = () => {
-  const { setInfoText, tickets, setTickets, draws, playerData, setPlayerData } = useContext(AppContext);
+type LotteryTableInputs = {
+	setInfoText: React.Dispatch<React.SetStateAction<string>>
+}
+
+const LotteryTable = ({setInfoText} : LotteryTableInputs) => {
+  const { tickets, setTickets, draws, playerData, setPlayerData, adminData, setAdminData, lotteryMeta } = useContext(AppContext);
 
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
 
@@ -36,31 +41,34 @@ const LotteryTable = () => {
   const handleSendTicket = () => {
 
 	// check for player balance
-	if(playerData.balance < 500)
+	if(playerData.balance < lotteryMeta.ticketPrice)
 	{
-		setInfoText!("Player does not have enough money to send tickets, one ticket costs 500 akcse")
+		setInfoText!(`Player does not have enough money to send tickets, one ticket costs ${lotteryMeta.ticketPrice} akcse`)
 		return
 	}
 
-	setPlayerData!((prev) => {return {...prev, balance: prev.balance - 500}})
+	setPlayerData!((prev) => {return {...prev, balance: prev.balance - lotteryMeta.ticketPrice}})
 	setTickets!([...tickets, {
 		id: tickets.length,
   		date: new Date(),
   		drawID: draws.find(d => !d.numbers)!.id,
   		player: "Player",
-  		numbers: selectedNumbers as [number, number, number, number, number],
+  		numbers: selectedNumbers as LotteryNumbers,
+		numbersHit: undefined,
   		hits: undefined,
   		reward: 0,
 	} ])
+	setAdminData!({...adminData, balance: adminData.balance + lotteryMeta.ticketPrice})
 	setSelectedNumbers([])
 	setInfoText!(`Ticket is sent with id#: ${tickets.length}`)
   }
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center justify-center">
       {/* lottery table */}
       <div className="flex w-[500px] flex-wrap">
-        {Array.from({ length: 39 }, (_, index) => index + 1).map((i) => (
+        {
+		getRangeArrWithLen(lotteryMeta.totalNumberCount).map((i) => (
           <div key={i}
             className={`flex justify-center items-center p-2 hover:bg-slate-300 rounded-full ${
               selectedNumbers.indexOf(i) !== -1 && " bg-red-500"
