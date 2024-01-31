@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 
-type SelectDropDownInputs = {
+interface SelectDropDownInputs extends React.HTMLAttributes<HTMLDivElement>  {
+  id: string
+  label: string
   options: string[];
   selectEvent?: (selected: string) => void;
 };
 
-const SelectDropDown = ({ options, selectEvent }: SelectDropDownInputs) => {
+const SelectDropDown = ({ id, label, options, selectEvent, ...rest}: SelectDropDownInputs) => {
+
   const [selected, setSelected] = useState("");
 
   const selectionChangedEvent = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -16,8 +19,9 @@ const SelectDropDown = ({ options, selectEvent }: SelectDropDownInputs) => {
   };
 
   return (
-    <div className="w-[200px]">
-      <select value={selected} onChange={selectionChangedEvent}>
+    <div {...rest}>
+      <label htmlFor={id} className="font-semibold ">{label}</label>
+      <select className="ml-3" id={id} name={id} value={selected} onChange={selectionChangedEvent}>
         {options.map((d, i) => (
           <option key={i} value={d}>
             {d}

@@ -1,29 +1,37 @@
 
 table unique key prop probléma
-
-enter-t nyomva is fogadja el az inputon belül a nevem
-
-hol hagytam még ki columnot amit mutatni kell?
-átgondolni nem maradt-e ki logika
-+ ami szerintem még kell bele + infó text stb hogy user friendly-b legyen
+húzás után "Tickets for previous round" csak refreshre updatelődik
+admin/ Tickets for previous round vannak benne helytelen találatok
+summary táblában kicsit kiemelni lényeges dolgokat
 
 refactor
-unused imports
 responsibilitykre odafigyelni
-
-lista a változtatásokról, megjegyzések
+unused imports
 minden kód ,komment stb legyen clean amit meg lehet mutatni munkaadónak
-
-github link
 
 végső elrendezés
 az a quiz appos design amit láttam korábban
 	player,admin tickets closed round mutatni a találatokat kör háttérrel
 mobile resp
 
+lista a változtatásokról, megjegyzések
+github link
 
 share on github
 deploy
 
+----------------------------------------------------------------
+
+hol hagytam még ki columnot amit mutatni kell?
+átgondolni nem maradt-e ki logika
++ ami szerintem még kell bele + infó text stb hogy user friendly-b legyen
+
 start new round
 ha lehet működjön tetszőleges szám mennyiségre(total, húzott)
+
+{`${tableData.tableId}_r_${rowIdx}`}
+{`${tableData.tableId}_c_${
+                      rowIdx * sortedData.length + colIdx
+                    }`}
+
+Tickets for previous round table key hiba a td renderkor

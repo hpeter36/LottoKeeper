@@ -14,13 +14,13 @@ function App() {
         {/* switch between player, admin */}
         <div className="flex">
           <div
-            className="grow text-center p-5"
+            className="p-5 text-xl text-center bg-green-500 grow hover:bg-green-700 hover:text-white"
             onClick={() => setPlayerActive(true)}
           >
             Player
           </div>
           <div
-            className="grow text-center p-5"
+            className="p-5 text-xl text-center bg-green-500 grow hover:bg-green-700 hover:text-white"
             onClick={() => setPlayerActive(false)}
           >
             Admin
